@@ -71,3 +71,20 @@ class ExpensesMonitorMain:
 
     def getExpensesByDescriptionContains(self, text):
         return [e for e in self.expenses if text.lower() in e.description.lower()]
+
+    def getFilteredExpenses(self, start_date=None, end_date=None, min_amount=None, max_amount=None, category=None,
+                            description_contains=None):
+        result = self.expenses
+        if start_date:
+            result = [e for e in result if e.date >= start_date]
+        if end_date:
+            result = [e for e in result if e.date <= end_date]
+        if min_amount is not None:
+            result = [e for e in result if e.amount >= min_amount]
+        if max_amount is not None:
+            result = [e for e in result if e.amount <= max_amount]
+        if category and category != "Wszystkie":
+            result = [e for e in result if e.category == category]
+        if description_contains:
+            result = [e for e in result if description_contains.lower() in e.description.lower()]
+        return result

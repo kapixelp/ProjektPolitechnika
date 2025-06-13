@@ -43,7 +43,7 @@ class SQLiteExpenseLoader(ExpenseLoader):
             return [
                 Expense(
                     amount, category, description,
-                    datetime.strptime(date_str, "%d-%m-%Y").date(),
+                    datetime.strptime(date_str, "%d-%m-%Y").date() ,
                     id
                 )
                 for id, amount, category, description, date_str in rows
