@@ -56,6 +56,8 @@ class ExpenseApp(QWidget):
         self.expense_list = QListWidget()
         layout.addWidget(QLabel("Lista wydatków:"))
         layout.addWidget(self.expense_list)
+        self.total_label = QLabel("Suma: 0.00 PLN")
+        layout.addWidget(self.total_label)
 
         # Formularz dodawania
         form_layout = QFormLayout()
@@ -100,6 +102,11 @@ class ExpenseApp(QWidget):
             self.expense_list.addItem(
                 f"ID: {expense.id} | {expense.amount:.2f} PLN | {expense.date.strftime('%d-%m-%Y')} | {expense.category} | {expense.description}"
             )
+        self.update_total(self.monitor.getExpenses())
+
+    def update_total(self, expense_list):
+        total = sum(e.amount for e in expense_list)
+        self.total_label.setText(f"Suma: {total:.2f} PLN")
 
     def load_filtered_expenses(self):
         try:
@@ -126,6 +133,7 @@ class ExpenseApp(QWidget):
                 )
         except ValueError:
             QMessageBox.warning(self, "Błąd", "Nieprawidłowe dane w filtrach.")
+        self.update_total(results)
 
     def add_expense(self):
         try:
