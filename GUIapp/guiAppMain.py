@@ -95,6 +95,7 @@ class ExpenseApp(QWidget):
 
     def load_expenses_to_list(self):
         self.expense_list.clear()
+        self.monitor.loadFromDatabase(self.loader)
         for expense in self.monitor.getExpenses():
             self.expense_list.addItem(
                 f"ID: {expense.id} | {expense.amount:.2f} PLN | {expense.date.strftime('%d-%m-%Y')} | {expense.category} | {expense.description}"

@@ -1,7 +1,7 @@
 import sqlite3
 from mainLogic.adapters.abstract.ExpenseLoader import ExpenseLoader
 from mainLogic.expensesMonitor.Expense import Expense
-from datetime import datetime
+from datetime import date
 import os
 
 class SQLiteExpenseLoader(ExpenseLoader):
@@ -42,8 +42,10 @@ class SQLiteExpenseLoader(ExpenseLoader):
             rows = cursor.fetchall()
             return [
                 Expense(
-                    amount, category, description,
-                    datetime.strptime(date_str, "%d-%m-%Y").date() ,
+                    amount,
+                    category,
+                    description,
+                    date.fromisoformat(date_str),  # <-- bezpieczne i spójne
                     id
                 )
                 for id, amount, category, description, date_str in rows
@@ -63,12 +65,12 @@ class SQLiteExpenseLoader(ExpenseLoader):
                             date        = ?
                         WHERE id = ?
                         """,
-                        (exp.amount, exp.category, exp.description, exp.date.strftime("%d-%m-%Y"), exp.id)
+                        (exp.amount, exp.category, exp.description, exp.date.isoformat(), exp.id)
                     )
                 else:
                     cursor.execute(
                         "INSERT INTO expenses (amount, category, description, date) VALUES (?, ?, ?, ?)",
-                        (exp.amount, exp.category, exp.description, exp.date.strftime("%d-%m-%Y"))
+                        (exp.amount, exp.category, exp.description, exp.date.isoformat())
                     )
                     exp.id = cursor.lastrowid
             conn.commit()
@@ -78,9 +80,9 @@ class SQLiteExpenseLoader(ExpenseLoader):
             cursor = conn.cursor()
             cursor.execute(
                 "INSERT INTO expenses (amount, category, description, date) VALUES (?, ?, ?, ?)",
-                (expense.amount, expense.category, expense.description, expense.date)
+                (expense.amount, expense.category, expense.description, expense.date.isoformat())
             )
-            expense.id = cursor.lastrowid  # ustaw ID nowo dodanego obiektu
+            expense.id = cursor.lastrowid
             conn.commit()
 
     def delete_expense_by_id(self, id):
