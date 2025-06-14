@@ -58,8 +58,11 @@ def add_expense():
 
 
 def show_all():
+    sum = 0
     for e in monitor.getExpenses():
         print_expense(e)
+        sum += e.amount
+    print(f"Suma: {sum:.2f}")
 
 
 def remove_by_id():
