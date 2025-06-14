@@ -84,7 +84,7 @@ class ExpenseApp(QWidget):
 
         add_button.clicked.connect(self.add_expense)
         delete_button.clicked.connect(self.delete_selected_expense)
-        refresh_button.clicked.connect(self.refresh_expenses())
+        refresh_button.clicked.connect(self.refresh_expenses)
 
         button_layout.addWidget(add_button)
         button_layout.addWidget(delete_button)
