@@ -84,7 +84,7 @@ class ExpenseApp(QWidget):
 
         add_button.clicked.connect(self.add_expense)
         delete_button.clicked.connect(self.delete_selected_expense)
-        refresh_button.clicked.connect(self.load_expenses_to_list)
+        refresh_button.clicked.connect(self.refresh_expenses())
 
         button_layout.addWidget(add_button)
         button_layout.addWidget(delete_button)
@@ -95,9 +95,14 @@ class ExpenseApp(QWidget):
 
         self.load_expenses_to_list()
 
+    def refresh_expenses(self):
+        self.monitor.loadFromDatabase(self.loader)
+        self.load_expenses_to_list()
+
+
     def load_expenses_to_list(self):
         self.expense_list.clear()
-        self.monitor.loadFromDatabase(self.loader)
+
         for expense in self.monitor.getExpenses():
             self.expense_list.addItem(
                 f"ID: {expense.id} | {expense.amount:.2f} PLN | {expense.date.strftime('%d-%m-%Y')} | {expense.category} | {expense.description}"
